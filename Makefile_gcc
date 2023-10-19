@@ -1,0 +1,150 @@
+GDAL_VERSION = 3.7.2
+SQLITE_VERSION = 3380500
+GEOS_VERSION = 3.12.0
+PROJ_VERSION = 9.3.0
+
+SQLITE_URL = "https://www.sqlite.org/2022/sqlite-autoconf-$(SQLITE_VERSION).tar.gz"
+PROJ_URL = "http://download.osgeo.org/proj/proj-$(PROJ_VERSION).tar.gz"
+GEOS_URL = "http://download.osgeo.org/geos/geos-$(GEOS_VERSION).tar.bz2"
+GDAL_URL = "https://github.com/OSGeo/gdal/releases/download/v$(GDAL_VERSION)/gdal-$(GDAL_VERSION).tar.gz"
+
+PWD = $(shell pwd)
+SRC_DIR = build/native/src
+SRC_DIR_FULL = $(PWD)/$(SRC_DIR)
+ROOT_DIR = $(PWD)/build/native/usr
+DIST_DIR = $(PWD)/build/package
+PREFIX = --prefix=$(ROOT_DIR)
+PREFIX_CMAKE = "-DCMAKE_INSTALL_PREFIX=$(ROOT_DIR)"
+
+ifeq ($(type), debug)
+TYPE_FLAGS = -g4 -O0
+else
+TYPE_FLAGS = -O3
+endif
+
+# EMCC_CFLAGS = -g4 -O0 -fexceptions -DRENAME_INTERNAL_LIBTIFF_SYMBOLS
+#EMCC_CFLAGS = $(TYPE_FLAGS) -fexceptions -DRENAME_INTERNAL_LIBTIFF_SYMBOLS -s ERROR_ON_UNDEFINED_SYMBOLS=0
+#EMMAKE ?= EMCC_CFLAGS="$(EMCC_CFLAGS)" emmake
+#EMCMAKE ?= emcmake
+#EMCC ?= CFLAGS="$(EMCC_CFLAGS)" emcc
+#EMCONFIGURE ?= CXXFLAGS="$(EMCC_CFLAGS)" CFLAGS="$(EMCC_CFLAGS)" emconfigure
+
+#include GDAL_EMCC_FLAGS.mk
+
+
+########
+# GDAL #
+########
+GDAL_SRC = $(SRC_DIR)/gdal-$(GDAL_VERSION)
+
+gdal: $(ROOT_DIR)/lib/libgdal.a
+
+$(ROOT_DIR)/lib/libgdal.a: $(GDAL_SRC)/build/Makefile
+	cd $(GDAL_SRC)/build; \
+	$(EMMAKE) make -j9 VERBOSE=1 install;
+
+$(GDAL_SRC)/build/Makefile: $(ROOT_DIR)/lib/libproj.a $(ROOT_DIR)/lib/libgeos.a $(GDAL_SRC)/CMakeLists.txt
+	cd $(GDAL_SRC); \
+	rm -rf $(ROOT_DIR)/lib/cmake; \
+	mkdir build; \
+	cd build; \
+	$(EMCMAKE) cmake .. $(PREFIX_CMAKE) -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DCMAKE_RULE_MESSAGES:BOOL=OFF \
+	-DACCEPT_MISSING_SQLITE3_MUTEX_ALLOC:BOOL=ON \
+	-DGDAL_USE_EXTERNAL_LIBS:BOOL=OFF -DGDAL_USE_INTERNAL_LIBS:BOOL=ON \
+	-DGDAL_USE_GEOS=ON \
+	-DBUILD_APPS=OFF \
+        -DCMAKE_PREFIX_PATH=$(ROOT_DIR) -DCMAKE_FIND_ROOT_PATH=$(ROOT_DIR) \
+        -DGDAL_USE_HDF5=OFF -DGDAL_USE_HDFS=OFF \
+	-DGDAL_BUILD_OPTIONAL_DRIVERS=OFF -DOGR_BUILD_OPTIONAL_DRIVERS=OFF -DGDAL_ENABLE_PLUGINS:BOOL=OFF \
+        -DPROJ_INCLUDE_DIR=$(ROOT_DIR)/include -DPROJ_LIBRARY_RELEASE=$(ROOT_DIR)/lib/libproj.a \
+        -DGEOS_INCLUDE_DIR=$(ROOT_DIR)/include -DGEOS_LIBRARY=$(ROOT_DIR)/lib/libgeos.a \
+
+$(GDAL_SRC)/CMakeLists.txt:
+	mkdir -p $(SRC_DIR); \
+	cd $(SRC_DIR); \
+	wget -nc $(GDAL_URL); \
+	tar -xf gdal-$(GDAL_VERSION).tar.gz;
+
+
+########
+# GEOS #
+########
+
+GEOS_SRC = $(SRC_DIR)/geos-$(GEOS_VERSION)
+
+geos: $(ROOT_DIR)/lib/libgeos.a
+
+$(ROOT_DIR)/lib/libgeos.a: $(GEOS_SRC)/build/Makefile
+	cd $(GEOS_SRC)/build; \
+	$(EMMAKE) make VERBOSE=1 -j4 install;
+
+$(GEOS_SRC)/build/Makefile: $(GEOS_SRC)/CMakeLists.txt
+	cd $(GEOS_SRC); \
+	rm -rf $(ROOT_DIR)/lib/cmake; \
+	mkdir build; \
+	cd build; \
+	$(EMCMAKE) cmake .. $(PREFIX_CMAKE) -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DCMAKE_RULE_MESSAGES:BOOL=OFF \
+	-DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF \
+	-DCMAKE_PREFIX_PATH=$(ROOT_DIR) -DCMAKE_FIND_ROOT_PATH=$(ROOT_DIR)
+
+$(GEOS_SRC)/CMakeLists.txt:
+	mkdir -p $(SRC_DIR); \
+	cd $(SRC_DIR); \
+	echo "{}" > package.json; \
+	wget -nc $(GEOS_URL); \
+	tar -xf geos-$(GEOS_VERSION).tar.bz2;
+
+
+########
+# PROJ #
+########
+PROJ_SRC = $(SRC_DIR)/proj-$(PROJ_VERSION)
+
+proj: $(ROOT_DIR)/lib/libproj.a
+
+$(ROOT_DIR)/lib/libproj.a: $(PROJ_SRC)/Makefile
+	cd $(PROJ_SRC); \
+	$(EMMAKE) make VERBOSE=1 install;
+
+$(PROJ_SRC)/Makefile: $(ROOT_DIR)/lib/libsqlite3.a $(PROJ_SRC)/CMakeLists.txt
+	cd $(PROJ_SRC); \
+	$(EMCMAKE) cmake . $(PREFIX_CMAKE)  \
+    -DSQLITE3_INCLUDE_DIR=${ROOT_DIR}/include \
+    -DSQLITE3_LIBRARY=${ROOT_DIR}/lib/libsqlite3.a \
+    -DENABLE_CURL=OFF \
+    -DBUILD_TESTING=OFF \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DBUILD_APPS=OFF;
+
+
+$(PROJ_SRC)/CMakeLists.txt:
+	mkdir -p $(SRC_DIR); \
+	cd $(SRC_DIR); \
+	wget -nc $(PROJ_URL); \
+	tar -xf proj-$(PROJ_VERSION).tar.gz;
+
+###########
+# SQLITE3 #
+###########
+SQLITE3_SRC = $(SRC_DIR)/sqlite-autoconf-$(SQLITE_VERSION)
+
+sqlite3: $(ROOT_DIR)/lib/libsqlite3.a
+
+$(ROOT_DIR)/lib/libsqlite3.a: $(SQLITE3_SRC)/Makefile
+	cd $(SQLITE3_SRC); \
+	$(EMMAKE) make VERBOSE=1 install;
+
+$(SQLITE3_SRC)/Makefile: $(SQLITE3_SRC)/configure
+	cd $(SQLITE3_SRC); \
+	$(EMCONFIGURE) ./configure $(PREFIX) --enable-shared=no \
+	CFLAGS="-I$(ROOT_DIR)/include -DSQLITE_DISABLE_LFS -DSQLITE_ENABLE_FTS3 -DSQLITE_ENABLE_FTS3_PARENTHESIS -DSQLITE_ENABLE_JSON1 -DSQLITE_THREADSAFE=0 -DSQLITE_ENABLE_NORMALIZE" \
+	CPPFLAGS="-I$(ROOT_DIR)/include" \
+	LDFLAGS="-L$(ROOT_DIR)/lib";
+
+$(SQLITE3_SRC)/configure:
+	mkdir -p $(SRC_DIR); \
+	cd $(SRC_DIR); \
+	wget -nc $(SQLITE_URL); \
+	tar -xf sqlite-autoconf-$(SQLITE_VERSION).tar.gz;
+

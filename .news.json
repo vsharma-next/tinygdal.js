@@ -1,0 +1,200 @@
+[
+    {
+        "version": "v2.4.0",
+        "date": "30.10.2022",
+        "commits": [
+            {
+                "description": "Add support for 'open options'",
+                "hash": "31a9064829bafc9146e51d06448ad232495d5c0e",
+                "user": "mthh"
+            },
+            {
+                "description": "Add --config parameter to ogr2ogr, gdal_translate, gdalwarp and gdal_rasterize.",
+                "hash": "83aca76cb2447085e488e239511881b79dcb9832",
+                "user": "bugra9"
+            },
+            {
+                "description": "Update Gdal, Proj, Zlib and Expat.",
+                "hash": "83aca76cb2447085e488e239511881b79dcb9832",
+                "user": "bugra9"
+            }
+        ]
+    },
+    {
+        "version": "v2.3.0",
+        "date": "31.07.2022",
+        "commits": [
+            {
+                "description": "Update Gdal, Proj, SQLite, Tiff, Geotiff, Expat",
+                "hash": "8c14ea922b8e606ad46a66ac48ea822e4edb2dd3",
+                "user": "bugra9"
+            },
+            {
+                "description": "Add and use external libiconv instead of Emscripten/Musl libiconv.",
+                "hash": "8c14ea922b8e606ad46a66ac48ea822e4edb2dd3",
+                "user": "bugra9"
+            }
+        ]
+    },
+    {
+        "version": "v2.2.0",
+        "date": "24.07.2022",
+        "commits": [
+            {
+                "description": "Add single file example running without server required.",
+                "hash": "8468f225ead3a71a6a3a4500e70b6891b7d4175a",
+                "user": "bugra9"
+            },
+            {
+                "description": "Change license from GPL to LGPL",
+                "hash": "da0afff9369b1cb1c4ac17b82738e40e11e2d06c",
+                "user": "bugra9"
+            },
+            {
+                "description": "Rename gdal3.js file to gdal3.node.js and create gdal3.js which only supports browser.",
+                "hash": "aa0a2f52a9e2ecfbe1191be03239bce90daabf55",
+                "user": "bugra9"
+            },
+            {
+                "description": "Update zlib version to fix broken link when running make",
+                "hash": "3210d1e368b65c9f5d0dc96ca20d3343d5a1fad9",
+                "user": "mthh"
+            }
+        ]
+    },
+    {
+        "version": "v2.1.0",
+        "date": "28.03.2022",
+        "commits": [
+            {
+                "description": "Added paths parameter to specify the path of the worker, data and wasm files.",
+                "hash": "427d76f72129c0596eafc9f46f9a7d4bcc78d355",
+                "user": "bugra9"
+            },
+            {
+                "description": "Added Typescript declaration file (index.d.ts)",
+                "hash": "492c5d0ae379ee464d06b3cc043427110e16a642",
+                "user": "bugra9"
+            },
+            {
+                "description": "Changed build tool from Webpack to Rollup.",
+                "hash": "caf27a7b98994d59676fc385ab6361b1f0c41f94",
+                "user": "bugra9"
+            },
+            {
+                "description": "Updated Gdal (3.4.2) and Emscripten (3.1.7)",
+                "hash": "b65b4c8fc57d36bd77226f2e81e9e98d59e7453a",
+                "user": "bugra9"
+            }
+        ]
+    },
+    {
+        "version": "v2.0.2",
+        "date": "11.03.2022",
+        "commits": [
+            {
+                "description": "Update Gdal to 3.4.1.",
+                "hash": "3a27029ed43d96c9aa822e36651f91a31d591661",
+                "user": "bugra9"
+            },
+            {
+                "description": "Fix file opening issue.",
+                "hash": "3a27029ed43d96c9aa822e36651f91a31d591661",
+                "user": "bugra9"
+            },
+            {
+                "description": "Add cpl config function.",
+                "hash": "e046b11d5be8b1e46926a6bd365a6da523400958",
+                "user": "khrushjing"
+            }
+        ]
+    },
+    {
+        "version": "v2.0.1",
+        "date": "02.01.2022",
+        "commits": [
+            {
+                "description": "Updated Gdal, Spatialite, Sqlite, Geos, Tiff, GeoTiff, Webp and Exfat.",
+                "hash": "8fa68b7a4f0630c77e4ea256f95c529543811ff6",
+                "user": "bugra9"
+            },
+            {
+                "description": "Added opening/creation options list and the information page link of the driver to the driver detail.",
+                "hash": "8fa68b7a4f0630c77e4ea256f95c529543811ff6",
+                "user": "bugra9"
+            },
+            {
+                "description": "Added dialog screen that options for the driver are listed / edited.",
+                "hash": "8fa68b7a4f0630c77e4ea256f95c529543811ff6",
+                "user": "bugra9"
+            },
+            {
+                "description": "Added type=debug parameter to makefile.",
+                "hash": "8fa68b7a4f0630c77e4ea256f95c529543811ff6",
+                "user": "bugra9"
+            },
+            {
+                "description": "Fixed the issue where some error logs were blank.",
+                "hash": "8fa68b7a4f0630c77e4ea256f95c529543811ff6",
+                "user": "bugra9"
+            },
+            {
+                "description": "Fixed the issue that some vector files are detected as raster.",
+                "hash": "8fa68b7a4f0630c77e4ea256f95c529543811ff6",
+                "user": "bugra9"
+            },
+            {
+                "description": "Fixed the issue that some files could not be opened.",
+                "hash": "8fa68b7a4f0630c77e4ea256f95c529543811ff6",
+                "user": "bugra9"
+            },
+            {
+                "description": "Fixed convert issue of the formats querying on file such as sqlite.",
+                "hash": "8fa68b7a4f0630c77e4ea256f95c529543811ff6",
+                "user": "bugra9"
+            },
+            {
+                "description": "Fixed MVT and Mbtiles creation issues.",
+                "hash": "8fa68b7a4f0630c77e4ea256f95c529543811ff6",
+                "user": "bugra9"
+            },
+            {
+                "description": "Fixed mif file creation issue.",
+                "hash": "cdebea42526f9722c7b2e6102b1182c44191ce7d",
+                "user": "bugra9"
+            },
+            {
+                "description": "Fixed double quote detection and display issues in options section of gdal3.js GUI convert screen.",
+                "hash": "8fa68b7a4f0630c77e4ea256f95c529543811ff6",
+                "user": "bugra9"
+            }
+        ]
+    },
+    {
+        "version": "v1.0.1",
+        "date": "21.09.2020",
+        "commits": [
+            {
+                "description": "Fixed a conversion issue for formats containing spaces.",
+                "hash": "53cddf4df1ee3ea1d046e30bf2c6b004bd023d17",
+                "user": "bugra9"
+            }
+        ]
+    },
+    {
+        "version": "v1.0.0",
+        "date": "26.05.2020",
+        "commits": [
+            {
+                "description": "Gdal compiled to javascript with Proj, Geos, Spatialite, Sqlite, GeoTIFF, Tiff, WebP, JPEG JFIF, Expat, Zlib.",
+                "hash": "ae5e6e8faa93cedec66b1afcf6a5314b9c66ad17",
+                "user": "bugra9"
+            },
+            {
+                "description": "Added gdal_translate, ogr2ogr, gdal_rasterize, gdalwarp programs.",
+                "hash": "ae5e6e8faa93cedec66b1afcf6a5314b9c66ad17",
+                "user": "bugra9"
+            }
+        ]
+    }
+]
